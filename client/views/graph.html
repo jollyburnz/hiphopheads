@@ -1,0 +1,25 @@
+<template name='graph'>
+<div id='graph'>
+    <div class="container scrollblock">
+      	<div class="row">
+      		<div class='span6'>
+	      		{{#if head}}
+					<h1>{{head}}</h1>
+				{{/if}}
+				<br/>
+				{{#if data.name}}
+					{{data}}
+				{{/if}}
+				{{#if collaborators}}
+					{{#each collaborators}}
+						<p>{{name}}</p>
+					{{/each}}
+				{{/if}}
+      		</div>
+      		<div class="span6">
+				<svg></svg>
+			</div>
+		</div>
+	</div>
+</div>
+</template>

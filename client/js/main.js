@@ -62,6 +62,6 @@ $(document).ready(function() {
     });
 
     scrollorama
-        .animate('#fade-in',{ delay: -300, duration: 300, property:'opacity', start:0 })
+        .animate('#fade-in',{ delay: -500, duration: 300, property:'opacity', start:0 })
 });
 
