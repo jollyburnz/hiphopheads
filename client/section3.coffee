@@ -92,7 +92,7 @@ Meteor.startup ->
         .attr("y1", (d) -> d.source.y)
         .attr("x2", (d) -> d.target.x)
         .attr("y2", (d) -> d.target.y)
-      console.log node, 'node'
+      #console.log node, 'node'
       node.attr "transform", (d) -> "translate(" + d.x + "," + d.y + ")"
 
       linkText.attr("x", (d) ->

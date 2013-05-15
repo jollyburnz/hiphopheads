@@ -47,5 +47,21 @@ $(document).ready(function() {
         return false
     });
 
+    var scrollorama = $.scrollorama({
+        enablePin: false,
+        blocks:'.scrollblock'
+    });
+
+    console.log('hello');
+    
+    scrollorama.onBlockChange(function() {
+        var i = scrollorama.blockIndex;
+        $('#console')
+            .css('display','block')
+            .text('onBlockChange | blockIndex:'+i+' | current block: '+scrollorama.settings.blocks.eq(i).attr('id'));
+    });
+
+    scrollorama
+        .animate('#fade-in',{ delay: -300, duration: 300, property:'opacity', start:0 })
 });
 
