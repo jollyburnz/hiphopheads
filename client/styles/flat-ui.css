@@ -325,7 +325,14 @@ h6 {
     font-weight: 700;
     letter-spacing: -1px;
     padding-top: 5px; }
-
+  .demo-logo .logo-heads {
+    background: url("../../images/demo/logo-heads.png") center 0 no-repeat;
+    height: 300px;
+    margin: 0 auto;
+    overflow: hidden;
+    text-indent: -9999em;
+    width: 940px; }
+}
 .demo-row {
   margin-bottom: 20px; }
 
