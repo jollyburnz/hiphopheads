@@ -225,61 +225,59 @@ Meteor.startup ->
   $('#chart').ready render()
 
 Template.graph.head = ->
-	Session.get 'cool'
+	Session.get 'hoverhead'
 
 Template.graph.data = ->
   #console.log Session.get 'cool'
-  if Session.equals 'cool', 'ross'
-    window.node = ross
+  if Session.equals 'hoverhead', 'ross'
+    window.dataset = ross
     #console.log _.values ross
-  else if Session.equals 'cool', 'snoop'
-    window.node = sdogg
+  else if Session.equals 'hoverhead', 'snoop'
+    window.dataset = sdogg
     #_.values sdogg
-  else if Session.equals 'cool', 'wayne'
-    window.node = wayne
+  else if Session.equals 'hoverhead', 'wayne'
+    window.dataset = wayne
     #_.values wayne
-  else if Session.equals 'cool', 'jay'
-    window.node = jayz
+  else if Session.equals 'hoverhead', 'jay'
+    window.dataset = jayz
     #_.values jayz
-  else if Session.equals 'cool', 'busta'
-    window.node = busta
+  else if Session.equals 'hoverhead', 'busta'
+    window.dataset = busta
     #_.values busta
   else
     ''
 Template.graph.collaborators = ->
-  if window.node
-    for i in window.node.collaborators
+  if window.dataset
+    for i in window.dataset.collaborators
       i
 
 Template.graph.rendered = ->
-  ###
-  link = []
-  console.log window.node
+  console.log window.dataset, 'rendered'
+  if window.dataset
+    nodeset = [{'id': 'N1', 'name': window.dataset.name}]
+    linkset = []
 
-  force = d3.layout.force()
-    .charge(-120)
-    .linkDistance(30)
-    .size([940, 500])
+    i = 2
+    for data in window.dataset.collaborators
+      console.log data, i
+      nodeset.push {'id': "N#{i}", 'name': data.name}
+      linkset.push {sourceId: "N1", targetId: "N#{i}"}
+      i++
 
-  svg = d3.select('svg')
-    .attr('width', 940)
-    .attr('height', 500)
+    console.log nodeset, 'nodes'
+    console.log linkset, 'links'
 
-  force
-    .nodes(node)
-    .start()
+    width = 400
+    height = 500
+    ###
+    force = d3.layout.force()
+      .charge(-1000)
+      .nodes(nodeset)
+      .links(linkset)
+      .size([width, height])
+      .linkDistance((d) -> if (width < height) then width*1/3 else height*1/3 )
+      .start()
+    
+    #console.log force
+    ###
 
-
-  link = svg.selectAll('.link')
-    .data(node)
-    .enter()
-    .append('line')
-    .attr('class', 'link')
-
-  node = svg.selectAll(".node")
-      .data(node)
-    .enter().append("circle")
-      .attr("class", (d) -> console.log d)
-      .attr("r", 5)
-      .call(force.drag)
-  ###

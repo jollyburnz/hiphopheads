@@ -5,65 +5,12 @@ Meteor.startup ->
   window.wayne = {"name":"Lil Wayne", "collaborators":[{"name":"Birdman", "count":"56"}, {"name":"Drake", "count":"29"}, {"name":"Big Tymers", "count":"28"}, {"name":"Gudda Gudda", "count":"24"}, {"name":"Mack Maine", "count":"21"}, {"name":"Nicki Minaj", "count":"20"}, {"name":"B.G.", "count":"18"}, {"name":"Juvenile", "count":"17"}, {"name":"Tyga", "count":"15"}, {"name":"Rick Ross", "count":"14"}, {"name":"Mannie Fresh", "count":"12"}, {"name":"Game", "count":"12"}, {"name":"DJ Khaled", "count":"12"}, {"name":"Juelz Santana", "count":"11"}, {"name":"Jae Millz", "count":"11"}, {"name":"Curren$y", "count":"11"}, {"name":"Lloyd", "count":"9"}, {"name":"Chris Brown", "count":"9"}, {"name":"Busta Rhymes", "count":"9"}, {"name":"T-Pain", "count":"8"}]}
   window.jay = {"name":"Jay-Z", "collaborators":[{"name":"Memphis Bleek", "count":"31"}, {"name":"Kanye West", "count":"30"}, {"name":"R. Kelly", "count":"28"}, {"name":"Beanie Sigel", "count":"24"}, {"name":"Amil", "count":"9"}, {"name":"Sauce Money", "count":"8"}, {"name":"Rick Ross", "count":"7"}, {"name":"Linkin Park", "count":"7"}, {"name":"Freeway", "count":"7"}, {"name":"Pharrell", "count":"6"}, {"name":"Big L", "count":"6"}, {"name":"Beyonc_", "count":"6"}, {"name":"Foxy Brown", "count":"6"}, {"name":"Lil Kim", "count":"5"}, {"name":"Young Jeezy", "count":"5"}, {"name":"The Notorious B.I.G.", "count":"5"}, {"name":"Scarface", "count":"4"}, {"name":"Rihanna", "count":"4"}, {"name":"Missy Elliott", "count":"4"}, {"name":"Nas", "count":"4"}]}
   window.busta = {"name":"Busta Rhymes", "collaborators":[{"name":"Lil Wayne", "count":"9"}, {"name":"Papoose", "count":"8"}, {"name":"DMX", "count":"8"}, {"name":"Q-Tip", "count":"8"}, {"name":"Missy Elliott", "count":"8"}, {"name":"Diddy", "count":"8"}, {"name":"DJ Kay Slay", "count":"7"}, {"name":"Game", "count":"7"}, {"name":"Mary J. Blige", "count":"7"}, {"name":"Rah Digga", "count":"7"}, {"name":"Swizz Beatz", "count":"7"}, {"name":"Flipmode Squad", "count":"7"}, {"name":"Raekwon", "count":"6"}, {"name":"Spliff Star", "count":"6"}, {"name":"DJ Khaled", "count":"5"}, {"name":"Nas", "count":"5"}, {"name":"The Notorious B.I.G.", "count":"5"}, {"name":"Capone N Noreaga", "count":"4"}, {"name":"N.O.R.E.", "count":"4"}, {"name":"Ghostface Killah", "count":"4"}]}
-  ###
-  r = d3.select('#ross')
-    .on 'mouseover', ->
-      d3.select(@).selectAll('path').attr('fill', 'black')
-      #Session.set 'data', 'ross'
-    .on 'mouseout', ->
-      d3.select(@).selectAll('path').attr('fill', '#657cdb')
 
-  s = d3.select('#snoop')
-    .on 'mouseover', ->
-      d3.select(@).selectAll('path').attr('fill', 'black')
-      #Session.set 'data', 'sdogg'
-    .on 'mouseout', ->
-      d3.select(@).selectAll('path').attr('fill', '#c7b299')
-
-  w = d3.select('#wayne')
-    .on 'mouseover', ->
-      d3.select(@).selectAll('path').attr('fill', 'black')
-      #Session.set 'data', 'wayne'
-    .on 'mouseout', ->
-      d3.select(@).selectAll('path').attr('fill', '#c1272d')
-
-  j = d3.select('#jay')
-    .on 'mouseover', ->
-      d3.select(@).selectAll('path').attr('fill', 'black')
-        .transition()
-        .duration(400)
-        .attr('transform', 'translate(-10,-10) scale(1.1)')
-      #Session.set 'data', 'jay'
-    .on 'mouseout', ->
-      d3.select(@).selectAll('path').attr('fill', '#f7931e')
-        .transition()
-        .duration(400)
-        .attr('transform', 'scale(1)')
-
-  b = d3.select('#busta')
-    .on 'mouseover', ->
-      d3.select(@).selectAll('path').attr('fill', 'black')
-        .transition()
-        .duration(400)
-        .attr('transform', 'translate(-10,-10) scale(1.1)')
-      #Session.set 'data', 'busta'
-    .on 'mouseout', ->
-      d3.select(@).selectAll('path').attr('fill', '#22B573')
-        .transition()
-        .duration(400)
-        .attr('transform', 'scale(1)')
-  window.cream = [r,s,w,j,b]
-
-  force = d3.layout.force()
-    .nodes(cream)
-    .links([])
-    .size([30, 30])
-    .start()
-  ###
+Template.section4.rendered = ->
   d3.select('#heads').selectAll('g')
     .attr('opacity', 0.6)
     .on 'mouseover', ->
-      Session.set 'cool', $(@).attr 'id'
+      Session.set 'hoverhead', $(@).attr 'id' #hover over the head for graph.coffee lines 227-253
       console.log $(@).attr 'id'
       d3.select(@).transition().duration(400).attr('opacity', 1)
       d3.select(@).selectAll('path')
