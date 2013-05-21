@@ -19,6 +19,7 @@ Template.section4.rendered = ->
         .attr('transform', 'translate(-10,-10) scale(1.1)')
       #Session.set 'data', 'dope'
     .on 'mouseout', ->
+      Session.set 'hoverhead', null
       d3.select(@).transition().duration(400).attr('opacity', 0.6)
       d3.select(@).selectAll('path')
         .transition()

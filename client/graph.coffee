@@ -245,7 +245,8 @@ Template.graph.data = ->
     window.dataset = busta
     #_.values busta
   else
-    ''
+    window.dataset = null
+
 Template.graph.collaborators = ->
   if window.dataset
     for i in window.dataset.collaborators
