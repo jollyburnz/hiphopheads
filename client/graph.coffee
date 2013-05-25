@@ -1,6 +1,11 @@
 Meteor.startup ->
   width = 960
   height = 700
+
+  barWidth = 500
+  barHeight = 100
+  barPadding = 1
+
   centerNodeSize = 50
   nodeSize = 10
   colorScale = d3.scale.category20()
@@ -75,12 +80,28 @@ Meteor.startup ->
   window.jayz = {"name":"Jay-Z", "collaborators":[{"name":"Memphis Bleek", "count":"31"}, {"name":"Kanye West", "count":"30"}, {"name":"R. Kelly", "count":"28"}, {"name":"Beanie Sigel", "count":"24"}, {"name":"Amil", "count":"9"}, {"name":"Sauce Money", "count":"8"}, {"name":"Rick Ross", "count":"7"}, {"name":"Linkin Park", "count":"7"}, {"name":"Freeway", "count":"7"}, {"name":"Pharrell", "count":"6"}, {"name":"Big L", "count":"6"}, {"name":"Beyonc_", "count":"6"}, {"name":"Foxy Brown", "count":"6"}, {"name":"Lil Kim", "count":"5"}, {"name":"Young Jeezy", "count":"5"}, {"name":"The Notorious B.I.G.", "count":"5"}, {"name":"Scarface", "count":"4"}, {"name":"Rihanna", "count":"4"}, {"name":"Missy Elliott", "count":"4"}, {"name":"Nas", "count":"4"}]}
   window.busta = {"name":"Busta Rhymes", "collaborators":[{"name":"Lil Wayne", "count":"9"}, {"name":"Papoose", "count":"8"}, {"name":"DMX", "count":"8"}, {"name":"Q-Tip", "count":"8"}, {"name":"Missy Elliott", "count":"8"}, {"name":"Diddy", "count":"8"}, {"name":"DJ Kay Slay", "count":"7"}, {"name":"Game", "count":"7"}, {"name":"Mary J. Blige", "count":"7"}, {"name":"Rah Digga", "count":"7"}, {"name":"Swizz Beatz", "count":"7"}, {"name":"Flipmode Squad", "count":"7"}, {"name":"Raekwon", "count":"6"}, {"name":"Spliff Star", "count":"6"}, {"name":"DJ Khaled", "count":"5"}, {"name":"Nas", "count":"5"}, {"name":"The Notorious B.I.G.", "count":"5"}, {"name":"Capone N Noreaga", "count":"4"}, {"name":"N.O.R.E.", "count":"4"}, {"name":"Ghostface Killah", "count":"4"}]}
   
+  window.dataset = window.ross.collaborators
 
-  render = ->
+  window.render = ->
     console.log 'render'
     svgCanvas = d3.select("#chart").append("svg")
       .attr("width", width)
       .attr("height", height)
+
+    barCanvas = d3.select("#chart2").append("svg")
+      .attr("width", barWidth)
+      .attr("height", barHeight)
+
+    rect = barCanvas.selectAll("rect").data(window.dataset.collaborators)
+
+    rect.enter().append("rect")
+      .attr("x", (d,i) -> return i * (barWidth / window.dataset.collaborators.length))
+      .attr("y", (d) -> return barHeight - (d.count * 4))
+      .attr("width", barWidth / window.dataset.collaborators.length - barPadding)
+      .attr("height", (d) -> return d.count * 4)
+      .attr("fill", window.color)
+
+    rect.exit().remove()
 
     node_hash = []
     type_hash = []
@@ -231,18 +252,28 @@ Template.graph.data = ->
   #console.log Session.get 'cool'
   if Session.equals 'hoverhead', 'ross'
     window.dataset = ross
+    window.color = "#4F64A8"
+    render()
     #console.log _.values ross
   else if Session.equals 'hoverhead', 'snoop'
     window.dataset = sdogg
+    window.color = "#C7B299"
+    render()
     #_.values sdogg
   else if Session.equals 'hoverhead', 'wayne'
     window.dataset = wayne
+    window.color = "#C1272D"
+    render()
     #_.values wayne
   else if Session.equals 'hoverhead', 'jay'
     window.dataset = jayz
+    window.color = "#F7931E"
+    render()
     #_.values jayz
   else if Session.equals 'hoverhead', 'busta'
     window.dataset = busta
+    window.color = "#22b573"
+    render()
     #_.values busta
   else
     window.dataset = null
