@@ -82,7 +82,7 @@ Meteor.startup ->
   
   window.dataset = window.ross.collaborators
 
-  window.render = ->
+  window.render4 = ->
     console.log 'render'
     svgCanvas = d3.select("#chart").append("svg")
       .attr("width", width)
@@ -253,27 +253,27 @@ Template.graph.data = ->
   if Session.equals 'hoverhead', 'ross'
     window.dataset = ross
     window.color = "#4F64A8"
-    render()
+    render4()
     #console.log _.values ross
   else if Session.equals 'hoverhead', 'snoop'
     window.dataset = sdogg
     window.color = "#C7B299"
-    render()
+    render4()
     #_.values sdogg
   else if Session.equals 'hoverhead', 'wayne'
     window.dataset = wayne
     window.color = "#C1272D"
-    render()
+    render4()
     #_.values wayne
   else if Session.equals 'hoverhead', 'jay'
     window.dataset = jayz
     window.color = "#F7931E"
-    render()
+    render4()
     #_.values jayz
   else if Session.equals 'hoverhead', 'busta'
     window.dataset = busta
     window.color = "#22b573"
-    render()
+    render4()
     #_.values busta
   else
     window.dataset = null
