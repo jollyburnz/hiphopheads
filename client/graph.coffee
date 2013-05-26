@@ -2,8 +2,8 @@ Meteor.startup ->
   width = 960
   height = 700
 
-  barWidth = 500
-  barHeight = 100
+  barWidth = 600
+  barHeight = 200
   barPadding = 1
 
   centerNodeSize = 50
@@ -84,9 +84,6 @@ Meteor.startup ->
 
   window.render4 = ->
     console.log 'render'
-    svgCanvas = d3.select("#chart").append("svg")
-      .attr("width", width)
-      .attr("height", height)
 
     barCanvas = d3.select("#chart2").append("svg")
       .attr("width", barWidth)
@@ -112,214 +109,41 @@ Meteor.startup ->
       .attr("x", (d, i) -> return -i * (barHeight / window.dataset.collaborators.length))
       .attr("transform","rotate(90)")
       .text((d) -> return d.name)
+ 
+  Template.graph.head = ->
+  	Session.get 'hoverhead'
 
-    node_hash = []
-    type_hash = []
+  Template.graph.data = ->
+    #console.log Session.get 'cool'
+    if Session.equals 'hoverhead', 'ross'
+      window.dataset = ross
+      window.color = "#4F64A8"
+      render4()
+      #console.log _.values ross
+    else if Session.equals 'hoverhead', 'snoop'
+      window.dataset = sdogg
+      window.color = "#C7B299"
+      render4()
+      #_.values sdogg
+    else if Session.equals 'hoverhead', 'wayne'
+      window.dataset = wayne
+      window.color = "#C1272D"
+      render4()
+      #_.values wayne
+    else if Session.equals 'hoverhead', 'jay'
+      window.dataset = jayz
+      window.color = "#F7931E"
+      render4()
+      #_.values jayz
+    else if Session.equals 'hoverhead', 'busta'
+      window.dataset = busta
+      window.color = "#22b573"
+      render4()
+      #_.values busta
+    else
+      window.dataset = null
 
-    # Create a hash that allows access to each node by its id
-    nodeSet.forEach (d, i) ->
-      node_hash[d.id] = d
-      type_hash[d.type] = d.type
-
-    #Append the source object node and the target object node to each link
-    linkSet.forEach (d, i) ->
-      d.source = node_hash[d.sourceId]
-      d.target = node_hash[d.targetId]
-      if d.sourceId is focalNodeID
-        d.direction = "OUT"
-      else
-        d.direction = "IN"
-
-    tick = ->
-      link
-        .attr("x1", (d) -> d.source.x)
-        .attr("y1", (d) -> d.source.y)
-        .attr("x2", (d) -> d.target.x)
-        .attr("y2", (d) -> d.target.y)
-      #console.log node, 'node'
-      node.attr "transform", (d) -> "translate(" + d.x + "," + d.y + ")"
-
-      linkText.attr("x", (d) ->
-        if d.target.x > d.source.x
-          d.source.x + (d.target.x - d.source.x) / 2
-        else
-          d.target.x + (d.source.x - d.target.x) / 2
-      ).attr "y", (d) ->
-        if d.target.y > d.source.y
-          d.source.y + (d.target.y - d.source.y) / 2
-        else
-          d.target.y + (d.source.y - d.target.y) / 2
-
-    nodeMouseover = ->
-      d3.select(this).select("circle")
-        .transition()
-          .duration(250)
-          .attr "r", (d, i) -> if d.id is focalNodeID then 65 else 15
-
-      d3.select(this).select("text")
-        .transition()
-          .duration(250)
-          .style("font", "bold 20px Arial")
-          .attr "fill", "Blue"
-    
-    nodeMouseout = ->
-      d3.select(this).select("circle")
-        .transition()
-          .duration(250)
-          .attr "r", (d, i) -> if d.id is focalNodeID then centerNodeSize else nodeSize
-
-      d3.select(this).select("text")
-        .transition()
-          .duration(250)
-          .style("font", "normal 16px Arial")
-          .attr "fill", "Blue"
-
-    # Create a force layout and bind Nodes and Links
-    force = d3.layout.force()
-      .charge(-1000)
-      .nodes(nodeSet)
-      .links(linkSet)
-      .size([width, height])
-      .linkDistance((d) -> if (width < height) then width*1/3 else height*1/3 )
-      .on("tick", tick)
-      .start()
-
-    # Draw lines for Links between Nodes
-    link = svgCanvas.selectAll(".gLink")
-      .data(force.links())
-      .enter()
-      .append("g").attr("class", "gLink")
-      .append("line")
-        .attr("class", "link")
-        .style("stroke", "#ccc")
-        .attr("x1", (d) -> d.source.x )
-        .attr("y1", (d) -> d.source.y )
-        .attr("x2", (d) -> d.target.x )
-        .attr("y2", (d) -> d.target.y )
-
-    # Create Nodes
-    node = svgCanvas.selectAll(".node")
-      .data(force.nodes())
-      .enter().append("g")
-      .attr("class", "node")
-      .attr("id", (d) ->
-        d.id )
-      .on("mouseover", nodeMouseover)
-      .on("mouseout", nodeMouseout)
-      .call(force.drag)
-
-    #Append circles to Nodes
-    ###
-    node.append("circle")
-      .attr("x", (d) -> d.x)
-      .attr("y", (d) -> d.y)
-      .attr("r", (d) ->
-        if d.id is focalNodeID
-          centerNodeSize
-        else
-          nodeSize )
-      .style("fill", "White")
-      .style("stroke-width", 5)
-      .style("stroke", (d, i) ->
-        colorVal = colorScale(i)
-        colorVal )
-      .call force.drag
-    ###
-    node.append('path')
-      .attr('d', jay111)
-      .attr('transform', "scale(0.4)")
-      .call(force.drag)
-
-    # Append text to Nodes
-    node.append("a")
-      .attr("xlink:href", (d) -> d.hlink)
-      .append("text").attr("x", (d) -> if d.id is focalNodeID then 0 else 20 )
-      .attr("y", (d) -> if d.id is focalNodeID then 0 else -10 )
-      .attr("text-anchor", (d) -> if d.id is focalNodeID then "middle" else "start" )
-      .attr("font-family", "Arial, Helvetica, sans-serif")
-      .style("font", "normal 16px Arial")
-      .attr("fill", "Blue")
-      .attr("dy", ".35em")
-      .text (d) -> d.name
-    
-    # Append text to Link edges
-    linkText = svgCanvas.selectAll(".gLink")
-      .data(force.links()).append("text")
-        .attr("font-family", "Arial, Helvetica, sans-serif")
-        .attr("x", (d) -> if d.target.x > d.source.x then d.source.x + (d.target.x - d.source.x) / 2 else d.target.x + (d.source.x - d.target.x) / 2 )
-        .attr("y", (d) -> if d.target.y > d.source.y then d.source.y + (d.target.y - d.source.y) / 2 else d.target.y + (d.source.y - d.target.y) / 2 )
-        .attr("fill", "Maroon")
-        .style("font", "normal 12px Arial")
-        .attr("dy", ".35em")
-        .text((d) -> null )
-
-  $('#chart').ready render()
-
-Template.graph.head = ->
-	Session.get 'hoverhead'
-
-Template.graph.data = ->
-  #console.log Session.get 'cool'
-  if Session.equals 'hoverhead', 'ross'
-    window.dataset = ross
-    window.color = "#4F64A8"
-    render4()
-    #console.log _.values ross
-  else if Session.equals 'hoverhead', 'snoop'
-    window.dataset = sdogg
-    window.color = "#C7B299"
-    render4()
-    #_.values sdogg
-  else if Session.equals 'hoverhead', 'wayne'
-    window.dataset = wayne
-    window.color = "#C1272D"
-    render4()
-    #_.values wayne
-  else if Session.equals 'hoverhead', 'jay'
-    window.dataset = jayz
-    window.color = "#F7931E"
-    render4()
-    #_.values jayz
-  else if Session.equals 'hoverhead', 'busta'
-    window.dataset = busta
-    window.color = "#22b573"
-    render4()
-    #_.values busta
-  else
-    window.dataset = null
-
-Template.graph.collaborators = ->
-  if window.dataset
-    for i in window.dataset.collaborators
-      i
-
-Template.graph.rendered = ->
-  console.log window.dataset, 'rendered'
-  if window.dataset
-    nodeset = [{'id': 'N1', 'name': window.dataset.name}]
-    linkset = []
-
-    i = 2
-    for data in window.dataset.collaborators
-      console.log data, i
-      nodeset.push {'id': "N#{i}", 'name': data.name}
-      linkset.push {sourceId: "N1", targetId: "N#{i}"}
-      i++
-
-    console.log nodeset, 'nodes'
-    console.log linkset, 'links'
-
-    width = 400
-    height = 500
-    ###
-    force = d3.layout.force()
-      .charge(-1000)
-      .nodes(nodeset)
-      .links(linkset)
-      .size([width, height])
-      .linkDistance((d) -> if (width < height) then width*1/3 else height*1/3 )
-      .start()
-    
-    #console.log force
-    ###
-
+  Template.graph.collaborators = ->
+    if window.dataset
+      for i in window.dataset.collaborators
+        i
