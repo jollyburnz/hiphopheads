@@ -2,7 +2,7 @@
 <div id='graph'>
     <div class="container scrollblock">
       	<div class="row">
-      		<div class='span6'>
+      		<div class='span2'>
 	      		{{#if head}}
 					<h1>{{head}}</h1>
 				{{/if}}
@@ -10,13 +10,10 @@
 				{{#if data.name}}
 					{{data}}
 				{{/if}}
-				{{#if collaborators}}
-					{{#each collaborators}}
-						<p>{{name}}</p>
-					{{/each}}
-				{{/if}}
+
       		</div>
-      		<div class="span6">
+      		<div class="span10">
+      			<div id='chart2'></div>
 				<svg></svg>
 			</div>
 		</div>

@@ -230,22 +230,28 @@ Template.graph.head = ->
 Template.graph.data = ->
   #console.log Session.get 'cool'
   if Session.equals 'hoverhead', 'ross'
-    window.dataset = ross
+    #window.dataset = ross
+    Session.set 'dataset', ross
     #console.log _.values ross
   else if Session.equals 'hoverhead', 'snoop'
-    window.dataset = sdogg
+    #window.dataset = sdogg
+    Session.set 'dataset', sdogg
     #_.values sdogg
   else if Session.equals 'hoverhead', 'wayne'
-    window.dataset = wayne
+    #window.dataset = wayne
+    Session.set 'dataset', wayne
     #_.values wayne
   else if Session.equals 'hoverhead', 'jay'
-    window.dataset = jayz
+    #window.dataset = jayz
+    Session.set 'dataset', jayz
     #_.values jayz
   else if Session.equals 'hoverhead', 'busta'
-    window.dataset = busta
+    #window.dataset = busta
+    Session.set 'dataset', busta
     #_.values busta
   else
-    window.dataset = null
+    #window.dataset = null
+    Session.set 'dataset', null
 
 Template.graph.collaborators = ->
   if window.dataset
@@ -253,6 +259,45 @@ Template.graph.collaborators = ->
       i
 
 Template.graph.rendered = ->
+
+  barWidth = 500
+  barHeight = 200
+  barPadding = 10
+
+  barCanvas = d3.select("#chart2").append("svg")
+    .attr("width", barWidth)
+    .attr("height", barHeight)
+
+  Meteor.autorun (c) ->
+    data = Session.get 'dataset'
+    if data
+      console.log data, data.collaborators.length, 'damnn'
+      cc = data.collaborators
+    
+      rect = barCanvas.selectAll("rect").data(cc)
+
+      rect.enter().append("rect")
+          .attr("x", (d,i) -> return i * (barWidth / 20))
+          .attr("y", (d) -> return barWidth)
+          .attr("width", (d) -> return barWidth / 20 - barPadding)
+          .attr("height", (d) -> return d.count * 4)
+          .attr("fill", 'red')
+        .transition(1500)
+          .attr("y", (d) -> return barHeight - (d.count * 4))
+
+      rect.exit().remove()
+
+      labels = barCanvas.selectAll("text").data(cc)
+
+      labels.enter().append("text")
+        .attr("y", (d, i) -> return -i * (barWidth / 20) - barPadding)
+        .attr("x", (d, i) -> return -i * (barHeight / 20))
+        .attr("transform","rotate(90)")
+        .text((d) -> return d.name)
+    
+    c.stop()
+
+  ###
   console.log window.dataset, 'rendered'
   if window.dataset
     nodeset = [{'id': 'N1', 'name': window.dataset.name}]
@@ -270,7 +315,7 @@ Template.graph.rendered = ->
 
     width = 400
     height = 500
-    ###
+
     force = d3.layout.force()
       .charge(-1000)
       .nodes(nodeset)
@@ -280,5 +325,5 @@ Template.graph.rendered = ->
       .start()
     
     #console.log force
-    ###
+  ###
 
